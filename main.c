@@ -3,9 +3,9 @@
 #include <string.h>
 
 typedef struct Info {
-    char title[21];
+    char title[100];
     int credit;
-    char instructor[16];
+    char instructor[100];
     int suggest_order;
 } Info;
 
@@ -32,30 +32,50 @@ int main(){
     Info *all_info = (Info*) malloc(row * sizeof(Info));
 
     int count = 0;
-
-    while(fgets(line, 100, fin2)){
-        printf("%s", line);
-        if(count % 5 == 0){
-            strcpy(all_info[count % 5].title, line);
-        }
-        else if(count % 5 == 1){
-            all_info[count % 5].credit = line;
-            // strcpy(all_info[count % 5].credit, line);
-        }
-        else if(count % 5 == 2){
-            strcpy(all_info[count % 5].instructor, line);
-        }
-        else if(count % 5 == 3){
-            all_info[count % 5].suggest_order = line;
-            // strcpy(all_info[count % 5].suggest_order, line);
-        }
-        
-        count += 1;
+    int round = 0;
+    
+    for(int i = 0 ; i < row ; i++){
+        fscanf(fin2, "%s %d %s %d", all_info[i].title, &all_info[i].credit, all_info[i].instructor, &all_info[i].suggest_order);
     }
 
     for(int i = 0 ; i < row ; i++){
         printf("%s %d %s %d\n", all_info[i].title, all_info[i].credit, all_info[i].instructor, all_info[i].suggest_order);
     }
+    printf("\n");
+
+
+    Info temp;
+
+    for(int i = 0 ; i < row ; i++){
+        for(int j = 0 ; j < row - i - 1; j++){
+            if(strcmp(all_info[j].title, all_info[j+1].title) > 0){
+                temp = all_info[j];
+                all_info[j] = all_info[j+1];
+                all_info[j+1] = temp;
+            }
+        }
+    }
+
+    for(int i = 0 ; i < row ; i++){
+        printf("%s %d %s %d\n", all_info[i].title, all_info[i].credit, all_info[i].instructor, all_info[i].suggest_order);
+    }
+    printf("\n");
+
+    for(int i = 0 ; i < row ; i++){
+        for(int j = 0 ; j < row - i - 1; j++){
+            if(all_info[j].suggest_order > all_info[j+1].suggest_order){
+                temp = all_info[j];
+                all_info[j] = all_info[j+1];
+                all_info[j+1] = temp;
+            }
+        }
+    }
+
+    for(int i = 0 ; i < row ; i++){
+        printf("%s %d %s %d\n", all_info[i].title, all_info[i].credit, all_info[i].instructor, all_info[i].suggest_order);
+    }
+    printf("\n");
+
 
     fclose(fin2);
     free(all_info);
